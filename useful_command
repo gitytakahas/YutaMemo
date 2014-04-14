@@ -1,0 +1,132 @@
+------------------------------------------
+git push to the remote repository :
+------------------------------------------
+git push <repository> <branch>
+git push https://github.com/gitytakahas/cmg-cmssw Yuta_develop_20140211
+
+------------------------------------------
+edmIntegrityCheck
+------------------------------------------
+edmIntegrityCheck.py -u htautau_group -p -w *.root /TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v2/AODSIM/V5_B/PAT_CMG_V5_16_0/EMuTau_Yuta_Feb12
+
+------------------------------------------
+getInfo
+------------------------------------------
+getInfo.py -s "select file_owner, path_name from dataset_details where path_name like '%EMuTau_Yuta_Feb12%' order by path_name"
+
+------------------------------------------
+Access to the eos root file
+------------------------------------------
+root://eoscms//eos/cms/store/cmst3/group/cmgtools/CMG/GluGluToHToTauTau_M-120_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_14_0/cmgTuple_1.root
+
+------------------------------------------
+Produce event list
+------------------------------------------
+eventList.py test/HiggsVBF125/H2TauTauSyncTreeMuEle/H2TauTauSyncTreeMuEle_tree.root --tree H2TauTauSyncTreeMuEle
+
+------------------------------------------
+Produce different event list
+------------------------------------------
+diffEventList.py test1 test2
+
+------------------------------------------
+Check CPU info
+------------------------------------------
+cat /proc/cpuinfo
+
+------------------------------------------
+Loop in the bash
+------------------------------------------
+for a in $(seq 1 5)
+do
+echo $a
+done
+
+------------------------------------------
+Check job status
+------------------------------------------
+bpeek <ID>
+
+------------------------------------------
+ Submit job
+------------------------------------------
+crab -cfg HOMET.cfg -create -submit
+
+------------------------------------------
+ Check status
+------------------------------------------
+crab -c crab_0_130901_143856 -status
+
+------------------------------------------
+ Collect your job
+------------------------------------------
+crab -c crab_0_130720_081427 -getoutput
+
+
+Tree->Draw("bdt_evt_L2T >> h(10,0,200)","(bdt_evt_isSignal==1)*bdt_evt_weight")
+
+
+------------------------------------------
+jobreport
+------------------------------------------
+jobreport.py /MuEG/Run2012A-22Jan2013-v1/AOD/PAT_CMG_V5_15_0/EMuTau_Yuta_Feb21 . -u htautau_group -w 'muEle_fullsel_tree_CMG*root' 
+=> be carefule about XXX*root 
+
+[ytakahas@lxplus415 ~/work/htautau_2014_analysis/CMSSW_5_3_14/src/CMGTools/H2TauTau/skimming/MuEG/Run2012A-22Jan2013-v1/AOD/PAT_CMG_V5_15_0_1393840295/EMuTau_Yuta_Feb21_Jobs]$ jobreport.py /MuEG/Run2012A-22Jan2013-v1/AOD/PAT_CMG_V5_15_0/EMuTau_Yuta_Feb21 . -u htautau_group -s -b 'bsub -q 2nd < batchScript.sh'
+
+=> Need to be in the directory where you can see the JobX/ directories 
+
+
+
+------------------------------------------
+change directory structure
+------------------------------------------
+scramv1 b ProjectRename
+
+
+------------------------------------------
+change preselection criteria
+------------------------------------------
+$CMSSW_BASE/src/CMGTools/H2TauTau/python/objects
+
+
+------------------------------------------
+LXR
+------------------------------------------
+When searching for python files, then 
+Files named : .*py
+Containing : PoolSourse
+
+
+------------------------------------------
+H2TauTau memo
+------------------------------------------
+for detecting leptonleg for the MET recoil correction
+CMGTools/H2TauTau/python/tools
+CMGTools/H2TauTau/python/objects
+
+
+------------------------------------------
+scram
+------------------------------------------
+scramv1 b ProjectRename
+scram list CMSSW
+
+
+------------------------------------------
+Add afs user
+------------------------------------------
+/usr/sbin/addusercern steggema
+
+
+------------------------------------------
+kill firefox
+------------------------------------------
+.mozilla/firefox/y5agqdie.default/.parentlock
+
+
+------------------------------------------
+check file
+------------------------------------------
+fs setacl -dir . -acl system:anyuser rl
+fs listacl /afs/cern.ch/user/y/ytakahas/public/WH_emt_3S_root/

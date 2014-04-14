@@ -1,0 +1,5 @@
+- higgs pT reweighting
+
+2) Give both numbers (+2.7% for pT > 100 GeV, -5.7% for pT > 170 GeV) and a) add the information about the finite Higgs boson mass and b) explain that the two effects are adverse.
+
+[The Higgs boson pT spectrum from POWHEG is reweighted to the spec- trum obtained from a next-to-next-to-leading-order (NNLO) calculation using HRES [46].] The reweighting corrects for both the differences between the NNLO and the NLO \pT spectrum, leading to an increase of event yields for higher Higgs boson \pT values, and the finite top quark mass, which leads to a reduction of the event yields for high Higgs boson \pT values. For Higgs boson $\pt > 100\GeV$, the net change in the event yield for the inclusive event sample is $+2.7\%$, whereas for Higgs boson $\pT > 170\GeV$, the change is $-5.7\%$. 

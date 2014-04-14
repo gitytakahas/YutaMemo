@@ -1,0 +1,52 @@
+--------------------------------------
+set up for the latest environment
+--------------------------------------
+cmsrel CMSSW_5_3_14
+cd CMSSW_5_3_14/src/
+cmsenv
+git cms-addpkg PhysicsTools/PatAlgos
+scram b -j 8
+git remote add cmg-cmssw https://github.com/CERN-PH-CMG/cmg-cmssw.git
+git fetch cmg-cmssw
+git checkout cmg-cmssw/CMG_PAT_V5_18_from-CMSSW_5_3_14
+git checkout -b YutaDevelopsForCMG_PAT_V5_18
+edit .git/info/sparse-checkout
+(put QuarkGluonTagger/EightTeV as well)
+git checkout
+git merge cmg-cmssw/CMG_PAT_from-CMSSW_5_3_12_patch1
+>> fix the competition part
+git cherry-pick 3bd861935a0425c4384525bc1ce9933bc0d0aa28
+
+
+https://github.com/CERN-PH-CMG/cmg-cmssw/tree/CMG_PAT_from-CMSSW_5_3_12_patch1/CMGTools/H2TauTau/Colin
+https://github.com/CERN-PH-CMG/cmg-cmssw/commit/3bd861935a0425c4384525bc1ce9933bc0d0aa28
+
+
+--------------------------------------
+modifications in the code
+--------------------------------------
+- add hasattr(tauweight) in H2TauTauTreeProducer
+- hadd WJetSoup / DYsoup etc 
+--> W+jet
+There are W+1jet events in W+jets, W+1 jets and W + 1jets ext,
+which is why you can't assign a cross section to each of the three samples and then proceed so we have this Njets weighting tool and we have to add them by hand and scale them to the total W+jets xsec
+
+- avoid zero division
+
+- tau up / down 
+--> tighter skimming (that is why the number of events are smaller)
+--> make DYJetsSoup, WJetSoup
+
+- runDataInput.py
+dothePlot to be True
+(when running, set to be False)
+
+cp ~/work/TauTrigger/CMSSW_5_3_14/src/CMGTools/H2TauTau/MuTau/muTau.root htt_mt.inputs-sm-8TeV.root
+cp ~/work/TauTrigger/CMSSW_5_3_14/src/CMGTools/H2TauTau/EleTau/eleTau.root htt_et.inputs-sm-8TeV.root
+
+
+======
+change ~/work/TauTrigger/CMSSW_5_3_14/src/CMGTools/H2TauTau/python/objects/cmgMuEleCor_cfi.py
+check MuEleUpdatePOProducer
+
+We probably need to change CMGTools/Common/plugins/PhysicsObjectProducer.h to do the shift sample !
