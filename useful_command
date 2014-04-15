@@ -130,3 +130,9 @@ check file
 ------------------------------------------
 fs setacl -dir . -acl system:anyuser rl
 fs listacl /afs/cern.ch/user/y/ytakahas/public/WH_emt_3S_root/
+
+
+------------------------------------------
+Run crab job 
+------------------------------------------
+voms-proxy-init -voms cms -valid 192:00
