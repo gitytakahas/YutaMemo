@@ -136,3 +136,25 @@ fs listacl /afs/cern.ch/user/y/ytakahas/public/WH_emt_3S_root/
 Run crab job 
 ------------------------------------------
 voms-proxy-init -voms cms -valid 192:00
+
+
+------------------------------------------
+pybatch
+------------------------------------------
+pybatch.py -o 20140329_nominal tauMu_2012_cfg.py -b 'bsub -q 8nh -J 20140329_nominal < batchScript.sh'
+
+
+------------------------------------------
+grid help
+------------------------------------------
+https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideCrab#Getting_Support
+
+------------------------------------------
+pick event
+------------------------------------------
+https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents
+
+------------------------------------------
+cmsShow
+------------------------------------------
+cmsShow root://eoscms//eos/cms/store/cmst3/user/ytakahas/CMG/HO/522D7B2B-67C4-E311-81D3-0025904B2C7E.root
