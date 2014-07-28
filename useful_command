@@ -158,3 +158,22 @@ https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents
 cmsShow
 ------------------------------------------
 cmsShow root://eoscms//eos/cms/store/cmst3/user/ytakahas/CMG/HO/522D7B2B-67C4-E311-81D3-0025904B2C7E.root
+
+------------------------------------------
+eos quota
+------------------------------------------
+eos quota
+
+------------------------------------------
+AN, DN setup
+------------------------------------------
+
+svn co -N svn+ssh://svn.cern.ch/reps/tdr2 myDir
+cd myDir
+svn update utils
+svn update -N notes
+svn update notes/AN-14-101
+(change AN-14-101 by the note number)
+eval `./notes/tdr runtime -csh`
+cd notes/AN-14-101/trunk
+tdr  --style=an b AN-14-101.tex
