@@ -4,6 +4,15 @@ git push to the remote repository :
 git push <repository> <branch>
 git push https://github.com/gitytakahas/cmg-cmssw Yuta_develop_20140211
 
+git remote add Jan https://github.com/steggema/cmg-cmssw/
+git remote -v
+git fetch Jan
+git lt Jan/HTauTauMiniAOD
+git cherry-pick e57e210
+git diff CMGTools/H2TauTau/python/proto/analyzers/H2TauTauTreeProducerTauMu.py
+git diff H2TauTauTreeProducerTauMu.py
+
+
 ------------------------------------------
 edmIntegrityCheck
 ------------------------------------------
@@ -168,12 +177,18 @@ eos quota
 AN, DN setup
 ------------------------------------------
 
-svn co -N svn+ssh://svn.cern.ch/reps/tdr2 myDir
-cd myDir
-svn update utils
-svn update -N notes
-svn update notes/AN-14-101
-(change AN-14-101 by the note number)
-eval `./notes/tdr runtime -csh`
-cd notes/AN-14-101/trunk
-tdr  --style=an b AN-14-101.tex
+> svn co -N svn+ssh://svn.cern.ch/reps/tdr2 myDir
+> cd myDir
+> svn update utils
+> svn update -N notes
+> svn update notes/DN-14-019
+> eval `./notes/tdr runtime -csh` # for tcsh. use -sh for bash.
+> cd notes/DN-14-019/trunk
+# (edit the template, then to build the document)
+> tdr --style=dn b DN-14-019
+ 
+You can commit your changes with
+> svn add NewFileNames
+before they can be committed.
+> svn commit –m "commit message"
+New files will first need to be added with
