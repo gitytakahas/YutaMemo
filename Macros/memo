@@ -1,0 +1,57 @@
+2013.09.17 Studied on GIT
+
+1. First, create the git repository on the web !
+https://github.com/gitytakahas
+-> create a new repo (right top menu)
+
+2. git clone
+git clone https://github.com/gitytakahas/YutaMacro <Name of the directory>
+
+3. work on the directory and register files 
+git add <files> 
+git add . (will be all)
+
+4. commit
+git commit -m "Create YutaMacro, First commit"
+
+5. git push
+git push -u origin master
+
+
+=== branch
+1. git branch issue1
+2. git checkout issue1 => Move to the issue1 branch
+
+--> or in short, git checkout -b <branch>
+
+3. git merge master => Merge branch
+4. git branch -d issue1 => Remove branch
+
+
+=== Status check commands
+git status == show status
+git describe --tags (tag check) == show tags
+git log == show history 
+git log --graph --oneline == show history in a easy-see way
+git log --decorate
+git branch == show branches
+
+
+=== tag
+git tag apple
+git tag
+git tag -am "this is banana" banana
+git tag -d apple => Delete tag
+
+
+=== PROBABLY NOT USED !!
+
+mkdir YutaMacro
+git init => Create .git directory under the working tree
+git add .
+git commit -m "xxx"
+git remote add origin https://github.com/gitytakahas/YutaMacro
+git push -u origin master
+
+
+See more info at https://github.com/gitytakahas/Test
