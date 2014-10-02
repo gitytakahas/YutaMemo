@@ -1,0 +1,50 @@
+imax    2     number of categories 
+jmax    5     number of samples minus one 
+kmax    *     number of nuisance parameters 
+------------------------------------------------------------------------------- 
+shapes * * ../common/vhtt.input_7TeV.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+shapes ZH_htt * ../common/vhtt.input_7TeV.root $CHANNEL/$PROCESS$MASS $CHANNEL/$PROCESS$MASS_$SYSTEMATIC 
+------------------------------------------------------------------------------- 
+bin                                               mmme_zh       eeem_zh        
+observation                                       3             1              
+------------------------------------------------------------------------------- 
+bin                                               mmme_zh       mmme_zh       mmme_zh       mmme_zh       mmme_zh       mmme_zh       eeem_zh       eeem_zh       eeem_zh       eeem_zh       eeem_zh       eeem_zh        
+process                                           0             1             2             3             4             5             0             1             2             3             4             5              
+process                                           ZH_htt        ZZ            Zjets         GGToZZ2L2L    ZH_hww125     TTZ           ZH_htt        ZZ            Zjets         GGToZZ2L2L    ZH_hww125     TTZ            
+rate                                              0.06748         0.61          0.13         0.032        0.08935        0.072        0.06711        0.561         0.145         0.043        0.08166        0.068         
+------------------------------------------------------------------------------- 
+lumi_7TeV lnN                                     1.022         1.022         -             1.022         1.022         1.022         1.022         1.022         -             1.022         1.022         1.022          
+CMS_eff_e lnN                                     1.02          1.020         -             1.020         1.020         1.020         1.06          1.060         -             1.060         1.060         1.060          
+CMS_eff_m lnN                                     1.06          1.060         -             1.060         1.060         1.060         1.02          1.020         -             1.020         1.020         1.020          
+CMS_trigger_e lnN                                 -             -             -             -             -             -             1.01          1.010         -             1.010         1.010         1.010          
+CMS_trigger_m lnN                                 1.01          1.010         -             1.010         1.010         1.010         -             -             -             -             -             -              
+CMS_fake_b_7TeV lnN                               1.01          1.010         -             1.010         1.010         1.010         1.01          1.010         -             1.010         1.010         1.010          
+QCDscale_VV lnN                                   -             1.023         -             -             -             -             -             1.023         -             -             -             -              
+pdf_qqbar lnN                                     1.027         1.033         -             -             1.027         -             1.027         1.033         -             -             1.027         -              
+QCDscale_VH lnN                                   1.029         -             -             -             1.029         -             1.029         -             -             -             1.029         -              
+CMS_zh2l2tau_GGZZ2L2LBkg lnN                      -             -             -             1.440         -             -             -             -             -             1.440         -             -              
+CMS_zh2l2tau_TTZBkg lnN                           -             -             -             -             -             1.500         -             -             -             -             -             1.500          
+CMS_zh2l2tau_ZjetBkg_emu_extrap lnN               -             -             1.300         -             -             -             -             -             1.300         -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_2 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_3 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_4 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+CMS_vhtt_mmme_zh_7TeV_Zjets_bin_5 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+CMS_vhtt_mmme_zh_7TeV_Zjets_bin_6 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+CMS_vhtt_mmme_zh_7TeV_Zjets_bin_7 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+CMS_vhtt_mmme_zh_7TeV_Zjets_bin_8 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+CMS_vhtt_mmme_zh_7TeV_Zjets_bin_9 shape           -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_11 shape          -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_12 shape          -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_mmme_zh_7TeV_Zjets_bin_14 shape          -             -             1.000         -             -             -             -             -             -             -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_1 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_2 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_3 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_4 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+CMS_vhtt_eeem_zh_7TeV_Zjets_bin_5 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+CMS_vhtt_eeem_zh_7TeV_Zjets_bin_6 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+CMS_vhtt_eeem_zh_7TeV_Zjets_bin_7 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+CMS_vhtt_eeem_zh_7TeV_Zjets_bin_8 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+CMS_vhtt_eeem_zh_7TeV_Zjets_bin_9 shape           -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_10 shape          -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_12 shape          -             -             -             -             -             -             -             -             1.000         -             -             -              
+#CMS_vhtt_eeem_zh_7TeV_Zjets_bin_13 shape          -             -             -             -             -             -             -             -             1.000         -             -             -              

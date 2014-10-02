@@ -1,0 +1,28 @@
+imax    1     number of categories 
+jmax    3     number of samples minus one 
+kmax    *     number of nuisance parameters 
+------------------------------------------------------------------------------- 
+shapes * * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+shapes WH_htt * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS$MASS $CHANNEL/$PROCESS$MASS_$SYSTEMATIC 
+------------------------------------------------------------------------------- 
+bin                                       ett          
+observation                               14           
+------------------------------------------------------------------------------- 
+bin                                       ett         ett         ett         ett          
+process                                   0           1           2           3            
+process                                   WH_htt      wz          zz          fakes        
+rate                                      0.580698    4.60039     0.364855    11.5125      
+------------------------------------------------------------------------------- 
+lumi_8TeV lnN                             1.026       1.026       1.026       -            
+pdf_qqbar lnN                             1.023       1.040       1.033       -            
+QCDscale_VH lnN                           1.01        -           -           -            
+QCDscale_VV lnN                           -           1.040       1.023       -            
+CMS_trigger_e lnN                         1.01        1.010       1.010       -            
+CMS_eff_e lnN                             1.02        1.020       1.020       -            
+CMS_eff_t_ett lnN                         1.14        1.140       1.140       -            
+CMS_scale_t_ett shape                        1        1.000       1.000       -            
+CMS_scale_met shape                          1        1.000       1.000       -            
+CMS_vhtt_el_veto lnN                      1.038       1.038       1.038       -            
+CMS_vhtt_mu_veto lnN                      1.007       1.007       1.007       -            
+CMS_vhtt_ett_fakes_norm_8TeV lnN          -           -           -           1.150        
+CMS_vhtt_ett_fakes_fit_8TeV shape         -           -           -           1.000        

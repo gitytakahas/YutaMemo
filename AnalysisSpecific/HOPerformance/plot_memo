@@ -1,0 +1,8 @@
+1. dist_map_1D.py
+-> Plot HO cluster energy distribution for signal / noise.
+The definition of signal/noise is to have (or not have) a associated jet with pT > 50 GeV within dR < 0.5
+
+2. dist_map.py
+-> Plot eta-phi map for the pedestal distributions for HO cluter energy.
+
+3. HO_associated_eff.py

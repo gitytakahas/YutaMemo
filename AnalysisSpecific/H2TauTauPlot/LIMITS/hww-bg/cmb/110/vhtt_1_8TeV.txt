@@ -1,0 +1,27 @@
+imax    2     number of categories 
+jmax    5     number of samples minus one 
+kmax    *     number of nuisance parameters 
+------------------------------------------------------------------------------- 
+shapes * * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+shapes WH * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS$MASS $CHANNEL/$PROCESS$MASS_$SYSTEMATIC 
+------------------------------------------------------------------------------- 
+bin                                   emtCatHigh      emtCatLow        
+observation                           12              31               
+------------------------------------------------------------------------------- 
+bin                                   emtCatHigh      emtCatHigh      emtCatHigh      emtCatHigh      emtCatHigh      emtCatHigh      emtCatLow       emtCatLow       emtCatLow       emtCatLow       emtCatLow       emtCatLow        
+process                               0               1               2               3               4               5               0               1               2               3               4               5                
+process                               WH              wz              zz              fakes           charge_fakes    WH_hww125       WH              wz              zz              fakes           charge_fakes    WH_hww125        
+rate                                  1.3937          7.82945         0.78584         6.50976         0.136726        0.177309        1.76763         12.3231         1.37192         14.8048         0.146002        0.163941         
+------------------------------------------------------------------------------- 
+lumi_8TeV lnN                         1.026           1.026           1.026           -               -               1.026           1.026           1.026           1.026           -               -               1.026            
+CMS_trigger_em lnN                    1.01            1.010           1.010           -               -               1.010           1.01            1.010           1.010           -               -               1.010            
+CMS_eff_e lnN                         1.02            1.020           1.020           -               -               1.020           1.02            1.020           1.020           -               -               1.020            
+CMS_eff_m lnN                         1.02            1.020           1.020           -               -               1.020           1.02            1.020           1.020           -               -               1.020            
+CMS_eff_t_emt lnN                     1.06            1.060           1.060           -               -               1.060           1.06            1.060           1.060           -               -               1.060            
+CMS_fake_b_8TeV lnN                   1.01            1.010           1.010           -               -               1.010           1.01            1.010           1.010           -               -               1.010            
+CMS_scale_t_emt lnN                   1.03            1.030           1.030           -               -               1.030           1.03            1.030           1.030           -               -               1.030            
+CMS_vhtt_emt_fakes_8TeV lnN           -               -               -               1.070           -               -               -               -               -               1.070           -               -                
+CMS_vhtt_emt_chargeFlip_8TeV shape    -               -               -               -               1.000           -               -               -               -               -               1.000           -                
+pdf_qqbar lnN                         1.023           1.040           1.033           -               -               -               1.023           1.040           1.033           -               -               -                
+QCDscale_VH lnN                       1.01            -               -               -               -               -               1.01            -               -               -               -               -                
+QCDscale_VV lnN                       -               1.040           1.023           -               -               -               -               1.040           1.023           -               -               -                

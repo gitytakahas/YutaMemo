@@ -1,0 +1,25 @@
+imax    2     number of categories 
+jmax    4     number of samples minus one 
+kmax    *     number of nuisance parameters 
+------------------------------------------------------------------------------- 
+shapes * * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS 
+shapes WH * ../common/vhtt.input_8TeV.root $CHANNEL/$PROCESS$MASS 
+------------------------------------------------------------------------------- 
+bin                                mmtCatHigh    mmtCatLow      
+observation                        4             17             
+------------------------------------------------------------------------------- 
+bin                                mmtCatHigh    mmtCatHigh    mmtCatHigh    mmtCatHigh    mmtCatHigh    mmtCatLow     mmtCatLow     mmtCatLow     mmtCatLow     mmtCatLow      
+process                            0             1             2             3             4             0             1             2             3             4              
+process                            WH            wz            zz            fakes         WH_hww125     WH            wz            zz            fakes         WH_hww125      
+rate                               0.364324      4.88287       0.379676      3.01588       0.0568994     0.298236      9.21596         1.05        14.6213       0.110824       
+------------------------------------------------------------------------------- 
+lumi_8TeV lnN                      1.026         1.026         1.026         -             1.026         1.026         1.026         1.026         -             1.026          
+CMS_trigger_m lnN                  1.01          1.010         1.010         -             1.010         1.01          1.010         1.010         -             1.010          
+CMS_eff_m lnN                      1.04          1.040         1.040         -             1.040         1.04          1.040         1.040         -             1.040          
+CMS_eff_t_mmt lnN                  1.06          1.060         1.060         -             1.060         1.06          1.060         1.060         -             1.060          
+CMS_fake_b_8TeV lnN                1.01          1.010         1.010         -             1.010         1.01          1.010         1.010         -             1.010          
+CMS_scale_t_mmt lnN                1.03          1.030         1.030         -             1.030         1.03          1.030         1.030         -             1.030          
+CMS_vhtt_mmt_fakes_8TeV lnN        -             -             -             1.140         -             -             -             -             1.140         -              
+pdf_qqbar lnN                      1.023         1.040         1.033         -             -             1.023         1.040         1.033         -             -              
+QCDscale_VH lnN                    1.01          -             -             -             -             1.01          -             -             -             -              
+QCDscale_VV lnN                    -             1.040         1.023         -             -             -             1.040         1.023         -             -              

@@ -1,0 +1,9 @@
+name                                                 pre fit                        b-only fit                           s+b fit         rho
+CMS_htt_WNorm_mutau_0jet_high_8TeV             0.00 +/- 1.00    -0.05 +/- 0.37 (-0.06sig, 0.38)    -0.11 +/- 0.38 (-0.11sig, 0.38)       -0.06
+CMS_htt_WNorm_mutau_1jet_medium_8TeV           0.00 +/- 1.00    +1.11 +/- 0.48 (+1.12sig, 0.48)    +1.04 +/- 0.49 (+1.04sig, 0.49)       -0.06
+CMS_htt_ZLScale_mutau_7TeV                     0.00 +/- 0.99    +0.02 +/- 0.66 (+0.02sig, 0.67)    -0.00 +/- 0.49 (-0.00sig, 0.50)       -0.04
+CMS_htt_mt_muTau_0jet_medium_7TeV_W_bin_3       0.00 +/- 0.99    -0.10 +/- 0.13 (-0.11sig, 0.13)    -0.11 +/- 0.18 (-0.11sig, 0.18)       +0.00
+CMS_htt_mt_muTau_1jet_high_lowhiggs_7TeV_ZL_bin_15       0.00 +/- 0.99    -0.00 +/- 0.34 (-0.00sig, 0.35)    -0.00 +/- 0.36 (-0.00sig, 0.36)       +0.00
+CMS_htt_mt_muTau_1jet_high_mediumhiggs_7TeV_ZJ_bin_14       0.00 +/- 0.99    -0.00 +/- 0.36 (-0.00sig, 0.36)    -0.00 +/- 0.40 (-0.00sig, 0.40)       -0.00
+CMS_scale_t_mutau_7TeV                         0.00 +/- 0.99    -0.06 +/- 0.14 (-0.06sig, 0.14)    -0.08 +/- 0.14 (-0.08sig, 0.14)       -0.06
+CMS_scale_t_mutau_8TeV                         0.00 +/- 0.99    -0.22 +/- 0.11 (-0.22sig, 0.11)    -0.26 +/- 0.12 (-0.26sig, 0.12)       -0.16
