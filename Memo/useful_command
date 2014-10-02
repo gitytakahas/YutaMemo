@@ -192,3 +192,9 @@ You can commit your changes with
 before they can be committed.
 > svn commit –m "commit message"
 New files will first need to be added with
+
+
+------------------------------------------
+Recovery of the old files
+------------------------------------------
+afs_admin recover /afs/cern.ch/user/y/ytakahas/.mozilla/firefox/y5agqdie.default/
