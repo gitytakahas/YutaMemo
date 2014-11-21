@@ -201,3 +201,13 @@ New files will first need to be added with
 Recovery of the old files
 ------------------------------------------
 afs_admin recover /afs/cern.ch/user/y/ytakahas/.mozilla/firefox/y5agqdie.default/
+
+------------------------------------------
+kill some commands
+------------------------------------------
+pgrep python | xargs kill
+
+------------------------------------------
+python
+------------------------------------------
+'{0:.1f}'.format()
