@@ -6,7 +6,8 @@
 import re, os.path, subprocess, sys, time, ConfigParser, os
 from optparse import OptionParser, OptionGroup
 
-origin="/eos/cms/store/cmst3/group/htautau/CMG/"
+#origin="/eos/cms/store/cmst3/group/htautau/CMG/"
+origin="/eos/cms/store/cmst3/user/ytakahas/CMG/"
 eos="/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select"
 
 def eosls(dir, dataset, pattern, isdo=False):

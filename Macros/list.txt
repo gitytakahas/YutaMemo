@@ -1,0 +1,11 @@
+/generator/Gen_bonly_bscale
+/generator/Gen_bonly_bscale_500_TB30
+/generator/Gen_bonly_tbscale
+/generator/Gen_bonly_tbscale_500_TB30
+/generator/Gen_gg_H_MSSM_mA800GeV_TB30
+/generator/Gen_gg_H_MSSM_mA800GeV_TB5
+/generator/Gen_tb_tbscale
+/generator/Gen_toponly_tbscale
+/generator/Gen_toponly_tbscale_500_TB30
+/generator/Gen_toponly_topscale
+/generator/Gen_toponly_topscale_500_TB30
