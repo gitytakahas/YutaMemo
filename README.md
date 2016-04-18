@@ -38,6 +38,10 @@ git diff CMGTools/H2TauTau/python/proto/analyzers/H2TauTauTreeProducerTauMu.py
 
 git diff H2TauTauTreeProducerTauMu.py
 
+git reset --merge
+
+git cms-addpkg GeneratorInterface/TauolaInterface ...
+
 ------------------------------------------
 
 Similar example:
@@ -324,3 +328,10 @@ bkill -s9 <jobid>
 find command
 ------------------------------------------
 find . -name "param_card.dat"
+
+
+------------------------------------------
+public settings
+------------------------------------------
+find . -type d -exec fs setacl {} system:anyuser rl \;
+fs setacl -dir . -acl system:anyuser rl

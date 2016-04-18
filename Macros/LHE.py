@@ -18,8 +18,8 @@ event_mass = num.zeros(1, dtype=float)
 event_tree.Branch('event_mass', event_mass, 'event_mass/D')
 
 
-handle_weight = Handle('GenEventInfoProduct')
-label_weight = ("generator")
+#handle_weight = Handle('GenEventInfoProduct')
+#label_weight = ("generator")
 
 handle_lhe = Handle('LHEEventProduct')
 label_lhe = ('externalLHEProducer')
@@ -34,15 +34,14 @@ for ev in events:
 
     evtid += 1
 
-    ev.getByLabel(label_weight, handle_weight)
-    gweight = handle_weight.product()
-    weight = gweight.weight()
+#    ev.getByLabel(label_weight, handle_weight)
+#    gweight = handle_weight.product()
+#    weight = gweight.weight()
 
     ev.getByLabel(label_lhe, handle_lhe)
     lhe = handle_lhe.product()
 
     outgoing = []
-    sumpt = 0
 
     for status, pdg, moth, mom in zip(lhe.hepeup().ISTUP, lhe.hepeup().IDUP, lhe.hepeup().MOTHUP, lhe.hepeup().PUP):
         if status==1 and abs(pdg) in [11, 13, 15]:
@@ -57,7 +56,7 @@ for ev in events:
     print '=========>', len(outgoing)
 
     if len(outgoing)!=2:
-        print '!!!!!!!!'
+        print '!!!!!!!! worng countings !!!!!!!!!!!!!'
     else:
         print (outgoing[0] + outgoing[1]).M()  
         event_mass[0] =(outgoing[0] + outgoing[1]).M()
