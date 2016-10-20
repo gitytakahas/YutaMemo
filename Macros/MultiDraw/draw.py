@@ -1,0 +1,217 @@
+import os, numpy, math, copy, math
+from array import array
+from ROOT import gStyle, TCanvas, TLegend, TH1F
+from officialStyle import officialStyle
+from DisplayManager import DisplayManager
+from DataMCPlot import *
+
+import MultiDraw
+
+gROOT.SetBatch(True)
+#gROOT.SetBatch(False)
+officialStyle(gStyle)
+gStyle.SetOptTitle(0)
+
+def comparisonPlots(hist, hists, total, pname='sync.pdf', isRatio=True):
+
+    display = DisplayManager(pname, isRatio, 0.42, 0.65)
+    display.Draw(hist, hists, total)
+
+
+
+
+lumi=24.5
+
+evaluateQCDfromdata = True
+
+basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput_SM/'
+
+process = {
+
+    'TT':{'name':'TT', 
+          'file':basedir + '/TT/TauTauAnalysis.TT_TuneCUETP8M1.root',
+          'cross-section':831.76,
+          'isSignal':0, 
+          'order':1},
+
+    'DY10to50':{'name':'DY10to50', 
+                'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-10to50_TuneCUETP8M1.root', 
+                'cross-section':18610.0,
+                'isSignal':0, 
+                'order':2},
+
+    'DY50':{'name':'DY50', 
+            'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-50_TuneCUETP8M1.root',
+            'cross-section':5765.4,
+            'isSignal':0, 
+            'order':3},
+
+    'WWTo1L1Nu2Q':{'name':'WWTo1L1Nu2Q', 
+                   'file':basedir + '/WW/TauTauAnalysis.WWTo1L1Nu2Q.root',
+                   'cross-section':1.212,
+                   'isSignal':0, 
+                   'order':4},
+
+#    'WWTo4Q':{'name':'WWTo4Q', 
+#              'file':basedir + '/WW/TauTauAnalysis.WWTo4Q_4f.root', 
+#              'cross-section':22.82,
+#              'isSignal':0, 
+#              'order':5},
+
+    'WZ':{'name':'WZ', 
+          'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1.root', 
+          'cross-section':10.71,
+          'isSignal':0, 
+          'order':6},
+
+    'ZZ':{'name':'ZZ', 
+          'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1.root', 
+          'cross-section':3.22,
+          'isSignal':0, 
+          'order':7},
+
+    'WJets':{'name':'WJets', 
+             'file':basedir + 'WJ/TauTauAnalysis.WJetsToLNu_TuneCUETP8M1.root', 
+             'cross-section':61526.7,
+             'isSignal':0, 
+             'order':8},
+
+#    'Signal':{'name':'Signal', 
+#              'file':basedir + 'signal/TauTauAnalysis.LowMass_30GeV_DiTauResonance.root', 
+#              'cross-section':1.,
+#              'isSignal':1, 
+#              'order':3000},
+
+    'data':{'name':'data_obs', 
+                'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016.root',
+                'cross-section':1.,
+                'isSignal':0, 
+                'order':2999},
+
+}
+
+vardir = {
+    'm_vis':{'drawname':'m_vis', 'nbins':30, 'min':0, 'max':120, 'label':'visible mass (GeV)'},
+    'mt_1':{'drawname':'mt_1', 'nbins':30, 'min':0, 'max':200, 'label':'Transverse mass (GeV)'},
+    'met':{'drawname':'met', 'nbins':30, 'min':0, 'max':200, 'label':'missing E_{T} (GeV)'},
+    'dR_ll':{'drawname':'dR_ll', 'nbins':30, 'min':0, 'max':math.pi, 'label':'#Delta R (l, #tau)'},
+    'pt_1':{'drawname':'pt_1', 'nbins':30, 'min':0, 'max':200, 'label':'muon pT (GeV)'},
+    'pt_2':{'drawname':'pt_2', 'nbins':30, 'min':0, 'max':200, 'label':'tau pT (GeV)'}
+    }
+
+
+# currently, for mu-tau channel only
+categories = {
+    'nominal':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0'},
+#    'nominal_ss':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0'},
+    }
+
+
+
+# Retrieve the # of generated events for the normalization
+
+
+for ii, val in process.iteritems():
+
+    file = TFile(val['file'])
+
+    ntot = file.Get("histogram_mutau/cutflow_mutau").GetBinContent(1)
+    process[ii]['ntot'] = ntot
+    process[ii]['file'] = file
+
+    print 'Register : ', ii, process[ii]['ntot']
+
+
+
+hists = {}
+
+for jj, cat in categories.iteritems():
+
+    print '-'*80
+    print '[INFO] Categories = ', jj
+
+    for ii, val in process.iteritems():
+
+        tree = val['file'].Get('tree_mutau')
+
+        print        
+        print '[INFO] : Process = ', ii
+        print
+        
+        var_tuples = []
+
+        for kk, var in vardir.iteritems():        
+            hname = 'hist_' + jj + '_' + ii + '_' + kk
+
+            _h_ = TH1F(hname, hname, var['nbins'], var['min'], var['max'])
+            _h_.Sumw2()
+            _h_.GetXaxis().SetLabelSize(0.0)
+            hists[hname] = _h_
+
+            var_tuples.append('{var} >> {hist}'.format(var=var['drawname'], hist=hname))
+
+        cut = '({c}) * {we}'.format(c=cat['sel'], we='weight')
+        tree.MultiDraw(var_tuples, cut)
+
+
+
+#print '-'*80
+#print 'what we have now :', hists
+#print '-'*80
+
+for jj, cat in categories.iteritems():
+
+    for kk, var in vardir.iteritems():        
+
+        stackname = 'stackhist_' + jj + '_' + kk
+        hist = DataMCPlot(stackname)
+        hist.legendBorders = 0.55, 0.55, 0.88, 0.88
+
+        hhists = []
+        rhist = None
+
+        for ii, val in process.iteritems():
+
+            hname = 'hist_' + jj + '_' + ii + '_' + kk
+            pname = val['name']
+
+            if not pname in ['data_obs']:
+                SF = val['cross-section']*lumi*1000/val['ntot']
+                hists[hname].Scale(SF)
+                print '[INFO] : ', pname, ', sigma =', val['cross-section'], 'SF = ', SF
+            else:
+                hists[hname].SetMarkerStyle(20)
+                hists[hname].SetMarkerSize(0.5)
+               
+            hist.AddHistogram(pname, hists[hname], val['order'])
+
+            if pname in ['data_obs']:
+                hist.Hist(pname).stack = False
+                hhists.append(hists[hname])
+            else:
+                if rhist==None:
+                    rhist = copy.deepcopy(hists[hname])
+                    rhist.GetXaxis().SetLabelSize(0.05)
+                    rhist.GetXaxis().SetLabelColor(1)
+                    rhist.GetXaxis().SetTitle(var['label'])
+                else:
+                    rhist.Add(hists[hname])
+
+
+
+        hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q'])
+#        hist.Group('electroweak', ['WZ', 'ZZ', 'WWTo1L1Nu2Q'])
+
+        print hist
+
+        hhists.insert(0, rhist)
+    
+        canvas = TCanvas()
+        hist.DrawStack('HIST', None, None, None, None, 2)
+        
+        comparisonPlots(hist, hhists, hist.returnTotal(), stackname + '.pdf')
+
+
+
+for ii, val in process.iteritems():
+    val['file'].Close()
