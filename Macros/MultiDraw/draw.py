@@ -12,13 +12,15 @@ gROOT.SetBatch(True)
 officialStyle(gStyle)
 gStyle.SetOptTitle(0)
 
-def comparisonPlots(hist, hists, total, pname='sync.pdf', isRatio=True):
+def comparisonPlots(hist, pname='sync.pdf', isRatio=True):
 
     display = DisplayManager(pname, isRatio, 0.42, 0.65)
-    display.Draw(hist, hists, total)
+    display.Draw(hist)
 
 
-
+def ensureDir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 lumi=24.5
 
@@ -102,8 +104,8 @@ vardir = {
 
 # currently, for mu-tau channel only
 categories = {
-    'nominal':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0'},
-#    'nominal_ss':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0'},
+    'nominal_os':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0 && channel==1'},
+#    'nominal_ss':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'},
     }
 
 
@@ -111,42 +113,48 @@ categories = {
 # Retrieve the # of generated events for the normalization
 
 
-for ii, val in process.iteritems():
+for processname, val in process.iteritems():
 
     file = TFile(val['file'])
 
     ntot = file.Get("histogram_mutau/cutflow_mutau").GetBinContent(1)
-    process[ii]['ntot'] = ntot
-    process[ii]['file'] = file
+    process[processname]['ntot'] = ntot
+    process[processname]['file'] = file
 
-    print 'Register : ', ii, process[ii]['ntot']
+    print 'Register : ', processname, process[processname]['ntot']
 
 
 
 hists = {}
 
-for jj, cat in categories.iteritems():
+for catname, cat in categories.iteritems():
 
     print '-'*80
-    print '[INFO] Categories = ', jj
+    print '[INFO] Categories = ', catname
+    print '-'*80
 
-    for ii, val in process.iteritems():
+    for processname, val in process.iteritems():
 
         tree = val['file'].Get('tree_mutau')
 
         print        
-        print '[INFO] : Process = ', ii
-        print
+        print '[INFO] : Process = ', processname
         
         var_tuples = []
 
-        for kk, var in vardir.iteritems():        
-            hname = 'hist_' + jj + '_' + ii + '_' + kk
+        for varname, var in vardir.iteritems():        
+            hname = 'hist_' + catname + '_' + processname + '_' + varname
 
-            _h_ = TH1F(hname, hname, var['nbins'], var['min'], var['max'])
-            _h_.Sumw2()
-            _h_.GetXaxis().SetLabelSize(0.0)
-            hists[hname] = _h_
+            hist_register = TH1F(hname, hname, var['nbins'], var['min'], var['max'])
+            hist_register.Sumw2()
+            hist_register.GetXaxis().SetLabelSize(0.0)
+            
+            if val['name'] in ['data_obs']:
+                hist_register.SetMarkerStyle(20)
+                hist_register.SetMarkerSize(0.5)
+
+
+            hists[hname] = hist_register
 
             var_tuples.append('{var} >> {hist}'.format(var=var['drawname'], hist=hname))
 
@@ -154,64 +162,73 @@ for jj, cat in categories.iteritems():
         tree.MultiDraw(var_tuples, cut)
 
 
+stackhists = {}
 
-#print '-'*80
-#print 'what we have now :', hists
-#print '-'*80
 
-for jj, cat in categories.iteritems():
+for catname, cat in categories.iteritems():
 
-    for kk, var in vardir.iteritems():        
+    ensureDir('fig_' + catname)
 
-        stackname = 'stackhist_' + jj + '_' + kk
+    for varname, var in vardir.iteritems():        
+
+        stackname = 'stackhist_' + catname + '_' + varname
         hist = DataMCPlot(stackname)
         hist.legendBorders = 0.55, 0.55, 0.88, 0.88
 
-        hhists = []
-        rhist = None
+        for processname, val in process.iteritems():
 
-        for ii, val in process.iteritems():
-
-            hname = 'hist_' + jj + '_' + ii + '_' + kk
+            hname = 'hist_' + catname + '_' + processname + '_' + varname
             pname = val['name']
-
+               
             if not pname in ['data_obs']:
                 SF = val['cross-section']*lumi*1000/val['ntot']
                 hists[hname].Scale(SF)
-                print '[INFO] : ', pname, ', sigma =', val['cross-section'], 'SF = ', SF
-            else:
-                hists[hname].SetMarkerStyle(20)
-                hists[hname].SetMarkerSize(0.5)
-               
+#                print '[INFO] : ', val['name'], ', sigma =', val['cross-section'], 'SF = ', SF
+
+
             hist.AddHistogram(pname, hists[hname], val['order'])
 
             if pname in ['data_obs']:
                 hist.Hist(pname).stack = False
-                hhists.append(hists[hname])
-            else:
-                if rhist==None:
-                    rhist = copy.deepcopy(hists[hname])
-                    rhist.GetXaxis().SetLabelSize(0.05)
-                    rhist.GetXaxis().SetLabelColor(1)
-                    rhist.GetXaxis().SetTitle(var['label'])
-                else:
-                    rhist.Add(hists[hname])
-
 
 
         hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q'])
 #        hist.Group('electroweak', ['WZ', 'ZZ', 'WWTo1L1Nu2Q'])
 
         print hist
-
-        hhists.insert(0, rhist)
     
-        canvas = TCanvas()
-        hist.DrawStack('HIST', None, None, None, None, 2)
-        
-        comparisonPlots(hist, hhists, hist.returnTotal(), stackname + '.pdf')
+        comparisonPlots(hist, 'fig_' + catname + '/' + stackname + '.pdf')
+
+        stackhists[stackname] = hist
+
+
+#print 'evaluateQCDfromdata', evaluateQCDfromdata
+#
+#if evaluateQCDfromdata:
+#    for catname, cat in categories.iteritems():
+#        
+#        if catname.find('os')==-1: continue
+#
+#        ensureDir('fig_' + catname + '_wQCD')
+#
+#        for varname, var in vardir.iteritems():
+#
+#            stackname = 'stackhist_' + catname + '_' + varname
+#            hist_wQCD = copy.deepcopy(stackhists[stackname])
+#    
+#            hist_SS_data = copy.deepcopy(stackhists[stackname.replace('os', 'ss')].Hist('data_obs'))
+#            hist_MC = copy.deepcopy(stackhists[stackname.replace('os', 'ss')].returnTotal())
+#            hist_SS_data.Add(hist_MC, -1)
+#    
+#            hist_wQCD.AddHistogram('QCD', hist_SS_data, 100)
+#
+#
+#            canvas = TCanvas()
+#            hist_wQCD.DrawStack('HIST', None, None, None, None, 2)
+#            
+#            comparisonPlots(hist_wQCD, [hist_SS_data], hist_wQCD.returnTotal(), 'fig_' + catname + '_wQCD/' + stackname + '.pdf')
 
 
 
-for ii, val in process.iteritems():
+for processname, val in process.iteritems():
     val['file'].Close()
