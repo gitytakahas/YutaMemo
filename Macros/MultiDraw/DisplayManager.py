@@ -94,6 +94,12 @@ class DisplayManager(object):
 #        self.histos = []
         self.pullRange = 0.5
 
+        self.adapt = ROOT.gROOT.GetColor(12)
+#        self.new_idx = ROOT.gROOT.GetListOfColors().GetSize() + 1
+        self.new_idx = 2001
+        self.trans = ROOT.TColor(self.new_idx, self.adapt.GetRed(), self.adapt.GetGreen(), self.adapt.GetBlue(), "",0.5)
+
+
     def Draw(self, histo):
 
 
@@ -123,15 +129,7 @@ class DisplayManager(object):
                     hist_hatch.SetBinError(ibin, self.total.weighted.GetBinError(ibin)/self.total.weighted.GetBinContent(ibin))
                 
 
-            adapt = ROOT.gROOT.GetColor(12)
-            new_idx = ROOT.gROOT.GetListOfColors().GetSize() + 1
-            trans = ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",0.5)
 #
-            hist_hatch.SetMarkerSize(0)
-            hist_hatch.SetFillColor(new_idx)
-            hist_hatch.SetFillStyle(3001)
-            hist_hatch.SetLineWidth(1)
-
 
             histPull = copy.deepcopy(self.data.obj)
             histPull.Divide(self.total.weighted)
@@ -183,9 +181,26 @@ class DisplayManager(object):
             histPull.SetTitle('')
 
 #            if ihist == 1:
+#            histPull.Draw("ep")
+#            hist_hatch.Draw("e2same")
+#            histPull.Draw("epsame")
+
+            
+            print 'color', self.new_idx
+
+            hist_hatch.SetMarkerSize(0)
+            hist_hatch.SetFillColor(self.new_idx)
+            hist_hatch.SetFillStyle(3001)
+            hist_hatch.SetLineWidth(1)
+
+            histPull.GetXaxis().SetTitleSize(0.1)
+            histPull.GetXaxis().SetLabelSize(0.1)
             histPull.Draw("ep")
             hist_hatch.Draw("e2same")
             histPull.Draw("epsame")
+            
+#            import pdb; pdb.set_trace()
+
 #            else:
 #                histPull.Draw("same ep")
 

@@ -1,4 +1,4 @@
-import os, numpy, math, copy, math
+import os, numpy, math, copy, math, sys, collections
 from array import array
 from ROOT import gStyle, TCanvas, TLegend, TH1F
 from officialStyle import officialStyle
@@ -22,11 +22,14 @@ def ensureDir(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-lumi=24.5
+#lumi=24.5
+lumi=12.9
 
 evaluateQCDfromdata = True
+normalizeWusinghighMT = True
+WsidebandMTvalue = 80.
 
-basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput_SM/'
+basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput/'
 
 process = {
 
@@ -60,17 +63,17 @@ process = {
 #              'isSignal':0, 
 #              'order':5},
 
-    'WZ':{'name':'WZ', 
-          'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1.root', 
-          'cross-section':10.71,
-          'isSignal':0, 
-          'order':6},
+   'WZ':{'name':'WZ', 
+         'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1.root', 
+         'cross-section':10.71,
+         'isSignal':0, 
+         'order':6},
 
-    'ZZ':{'name':'ZZ', 
-          'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1.root', 
-          'cross-section':3.22,
-          'isSignal':0, 
-          'order':7},
+   'ZZ':{'name':'ZZ', 
+         'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1.root', 
+         'cross-section':3.22,
+         'isSignal':0, 
+         'order':7},
 
     'WJets':{'name':'WJets', 
              'file':basedir + 'WJ/TauTauAnalysis.WJetsToLNu_TuneCUETP8M1.root', 
@@ -85,16 +88,16 @@ process = {
 #              'order':3000},
 
     'data':{'name':'data_obs', 
-                'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016.root',
-                'cross-section':1.,
-                'isSignal':0, 
-                'order':2999},
+            'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016.root',
+            'cross-section':1.,
+            'isSignal':0, 
+            'order':2999},
 
 }
 
 vardir = {
     'm_vis':{'drawname':'m_vis', 'nbins':30, 'min':0, 'max':120, 'label':'visible mass (GeV)'},
-    'mt_1':{'drawname':'mt_1', 'nbins':30, 'min':0, 'max':200, 'label':'Transverse mass (GeV)'},
+    'mt_1':{'drawname':'mt_1', 'nbins':40, 'min':0, 'max':200, 'label':'Transverse mass (GeV)'},
     'met':{'drawname':'met', 'nbins':30, 'min':0, 'max':200, 'label':'missing E_{T} (GeV)'},
     'dR_ll':{'drawname':'dR_ll', 'nbins':30, 'min':0, 'max':math.pi, 'label':'#Delta R (l, #tau)'},
     'pt_1':{'drawname':'pt_1', 'nbins':30, 'min':0, 'max':200, 'label':'muon pT (GeV)'},
@@ -103,16 +106,12 @@ vardir = {
 
 
 # currently, for mu-tau channel only
-categories = {
-    'nominal_os':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0 && channel==1'},
-#    'nominal_ss':{'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'},
-    }
-
+categories = collections.OrderedDict()
+categories['nominal_ss'] = {'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'}
+categories['nominal_os'] = {'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0 && channel==1'}
 
 
 # Retrieve the # of generated events for the normalization
-
-
 for processname, val in process.iteritems():
 
     file = TFile(val['file'])
@@ -131,6 +130,7 @@ for catname, cat in categories.iteritems():
 
     print '-'*80
     print '[INFO] Categories = ', catname
+    print '[INFO] ', cat['sel']
     print '-'*80
 
     for processname, val in process.iteritems():
@@ -146,8 +146,9 @@ for catname, cat in categories.iteritems():
             hname = 'hist_' + catname + '_' + processname + '_' + varname
 
             hist_register = TH1F(hname, hname, var['nbins'], var['min'], var['max'])
+            hist_register.GetXaxis().SetTitle(var['label'])
             hist_register.Sumw2()
-            hist_register.GetXaxis().SetLabelSize(0.0)
+            hist_register.GetXaxis().SetLabelSize(0)
             
             if val['name'] in ['data_obs']:
                 hist_register.SetMarkerStyle(20)
@@ -162,7 +163,33 @@ for catname, cat in categories.iteritems():
         tree.MultiDraw(var_tuples, cut)
 
 
-stackhists = {}
+SFforW = 1.
+
+if normalizeWusinghighMT:
+
+    data = 0
+    totalmc = 0
+    wyield = 0
+
+    for processname, val in process.iteritems():
+        hname = 'hist_nominal_os_' + processname + '_mt_1'
+        bin_min = hists[hname].GetXaxis().FindBin(WsidebandMTvalue)
+        bin_max = hists[hname].GetXaxis().FindBin(hists[hname].GetXaxis().GetXmax())
+
+        pname = val['name']
+        scale = val['cross-section']*lumi*1000/val['ntot']
+
+        if pname == 'WJets':
+            wyield = hists[hname].Integral(bin_min, bin_max)*scale
+        elif pname == 'data_obs':
+            data = hists[hname].Integral(bin_min, bin_max)
+        else:
+            totalmc += hists[hname].Integral(bin_min, bin_max)*scale
+
+
+    if wyield!=0:
+        SFforW = (data - totalmc)/wyield
+        print 'W normalization summary : data ', data, ', other MC : ', totalmc, ', Wyield : ', wyield, ', SF = ', SFforW
 
 
 for catname, cat in categories.iteritems():
@@ -183,7 +210,12 @@ for catname, cat in categories.iteritems():
             if not pname in ['data_obs']:
                 SF = val['cross-section']*lumi*1000/val['ntot']
                 hists[hname].Scale(SF)
-#                print '[INFO] : ', val['name'], ', sigma =', val['cross-section'], 'SF = ', SF
+            #                print '[INFO] : ', val['name'], ', sigma =', val['cross-section'], 'SF = ', SF
+
+            if pname == 'WJets':
+                hists[hname].Scale(SFforW)
+                print 'additionally normalize W by ', SFforW
+
 
 
             hist.AddHistogram(pname, hists[hname], val['order'])
@@ -192,6 +224,25 @@ for catname, cat in categories.iteritems():
                 hist.Hist(pname).stack = False
 
 
+        if evaluateQCDfromdata and catname.find('os')!=-1:
+            h_QCD = None
+
+            for processname, val in process.iteritems():
+
+                hname = 'hist_' + catname.replace('os', 'ss') + '_' + processname + '_' + varname
+
+                addfactor = -1
+                if val['name'] == 'data_obs':
+                    addfactor = 1.
+
+                if h_QCD == None:
+                    h_QCD = copy.deepcopy(hists[hname])
+                else:
+                    h_QCD.Add(hists[hname], addfactor)
+
+            hist.AddHistogram('QCD', h_QCD, 0)
+            
+
         hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q'])
 #        hist.Group('electroweak', ['WZ', 'ZZ', 'WWTo1L1Nu2Q'])
 
@@ -199,36 +250,3 @@ for catname, cat in categories.iteritems():
     
         comparisonPlots(hist, 'fig_' + catname + '/' + stackname + '.pdf')
 
-        stackhists[stackname] = hist
-
-
-#print 'evaluateQCDfromdata', evaluateQCDfromdata
-#
-#if evaluateQCDfromdata:
-#    for catname, cat in categories.iteritems():
-#        
-#        if catname.find('os')==-1: continue
-#
-#        ensureDir('fig_' + catname + '_wQCD')
-#
-#        for varname, var in vardir.iteritems():
-#
-#            stackname = 'stackhist_' + catname + '_' + varname
-#            hist_wQCD = copy.deepcopy(stackhists[stackname])
-#    
-#            hist_SS_data = copy.deepcopy(stackhists[stackname.replace('os', 'ss')].Hist('data_obs'))
-#            hist_MC = copy.deepcopy(stackhists[stackname.replace('os', 'ss')].returnTotal())
-#            hist_SS_data.Add(hist_MC, -1)
-#    
-#            hist_wQCD.AddHistogram('QCD', hist_SS_data, 100)
-#
-#
-#            canvas = TCanvas()
-#            hist_wQCD.DrawStack('HIST', None, None, None, None, 2)
-#            
-#            comparisonPlots(hist_wQCD, [hist_SS_data], hist_wQCD.returnTotal(), 'fig_' + catname + '_wQCD/' + stackname + '.pdf')
-
-
-
-for processname, val in process.iteritems():
-    val['file'].Close()
