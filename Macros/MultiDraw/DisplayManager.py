@@ -1,7 +1,7 @@
 import ROOT
 import copy
 
-def add_lumi():
+def add_lumi(luminumber):
     lowX=0.6
     lowY=0.842
     lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.30, lowY+0.16, "NDC")
@@ -11,7 +11,7 @@ def add_lumi():
     lumi.SetTextColor(    1 )
     lumi.SetTextSize(0.05)
     lumi.SetTextFont (   42 )
-    lumi.AddText("2016, 24.5 fb^{-1} (13TeV)")
+    lumi.AddText("2016, " + str(luminumber) + " fb^{-1} (13TeV)")
     return lumi
 
 
@@ -81,13 +81,14 @@ def createRatioCanvas(name, errorBandFillColor=14, errorBandStyle=3354):
 
 class DisplayManager(object):
 
-    def __init__(self, name, ratio, xmin=0.42, ymin=0.6):
+    def __init__(self, name, ratio, lumi, xmin=0.42, ymin=0.6):
 
         if ratio:
             self.canvas = createRatioCanvas(name.replace('pdf', ''))
         else:
             self.canvas = ROOT.TCanvas(name.replace('.pdf', ''))
 
+        self.lumi = lumi
         self.name = name
         self.draw_ratio = ratio
         self.histo = None
@@ -224,7 +225,7 @@ class DisplayManager(object):
 
         self.canvas.Update()
 
-        l1=add_lumi()
+        l1=add_lumi(self.lumi)
         l1.Draw("same")
         l2=add_CMS()
         l2.Draw("same")

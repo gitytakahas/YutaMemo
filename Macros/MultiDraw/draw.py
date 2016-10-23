@@ -4,8 +4,16 @@ from ROOT import gStyle, TCanvas, TLegend, TH1F
 from officialStyle import officialStyle
 from DisplayManager import DisplayManager
 from DataMCPlot import *
-
 import MultiDraw
+
+
+lumi=12.9
+#lumi=24.5
+
+evaluateQCDfromdata = True
+normalizeWusinghighMT = True
+WsidebandMTvalue = 80.
+
 
 gROOT.SetBatch(True)
 #gROOT.SetBatch(False)
@@ -14,7 +22,7 @@ gStyle.SetOptTitle(0)
 
 def comparisonPlots(hist, pname='sync.pdf', isRatio=True):
 
-    display = DisplayManager(pname, isRatio, 0.42, 0.65)
+    display = DisplayManager(pname, isRatio, lumi, 0.42, 0.65)
     display.Draw(hist)
 
 
@@ -22,97 +30,133 @@ def ensureDir(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-#lumi=24.5
-lumi=12.9
-
-evaluateQCDfromdata = True
-normalizeWusinghighMT = True
-WsidebandMTvalue = 80.
 
 basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput/'
 
 process = {
 
     'TT':{'name':'TT', 
-          'file':basedir + '/TT/TauTauAnalysis.TT_TuneCUETP8M1.root',
+          'file':basedir + '/TT/TauTauAnalysis.TT_TuneCUETP8M1_ICHEP.root',
           'cross-section':831.76,
           'isSignal':0, 
           'order':1},
 
     'DY10to50':{'name':'DY10to50', 
-                'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-10to50_TuneCUETP8M1.root', 
+                'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-10to50_TuneCUETP8M1_ICHEP.root', 
                 'cross-section':18610.0,
                 'isSignal':0, 
                 'order':2},
 
     'DY50':{'name':'DY50', 
-            'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-50_TuneCUETP8M1.root',
+            'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-50_TuneCUETP8M1_ICHEP.root',
             'cross-section':5765.4,
             'isSignal':0, 
             'order':3},
 
     'WWTo1L1Nu2Q':{'name':'WWTo1L1Nu2Q', 
-                   'file':basedir + '/WW/TauTauAnalysis.WWTo1L1Nu2Q.root',
+                   'file':basedir + '/WW/TauTauAnalysis.WWTo1L1Nu2Q_ICHEP.root',
                    'cross-section':1.212,
                    'isSignal':0, 
                    'order':4},
 
 #    'WWTo4Q':{'name':'WWTo4Q', 
-#              'file':basedir + '/WW/TauTauAnalysis.WWTo4Q_4f.root', 
+#              'file':basedir + '/WW/TauTauAnalysis.WWTo4Q_4f_ICHEP.root', 
 #              'cross-section':22.82,
 #              'isSignal':0, 
 #              'order':5},
 
-   'WZ':{'name':'WZ', 
-         'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1.root', 
-         'cross-section':10.71,
-         'isSignal':0, 
-         'order':6},
+    'WZ':{'name':'WZ', 
+          'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1_ICHEP.root', 
+          'cross-section':10.71,
+          'isSignal':0, 
+          'order':6},
 
-   'ZZ':{'name':'ZZ', 
-         'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1.root', 
-         'cross-section':3.22,
-         'isSignal':0, 
-         'order':7},
+    'ZZ':{'name':'ZZ', 
+          'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1_ICHEP.root', 
+          'cross-section':3.22,
+          'isSignal':0, 
+          'order':7},
 
     'WJets':{'name':'WJets', 
-             'file':basedir + 'WJ/TauTauAnalysis.WJetsToLNu_TuneCUETP8M1.root', 
+             'file':basedir + 'WJ/TauTauAnalysis.WJetsToLNu_TuneCUETP8M1_ICHEP.root', 
              'cross-section':61526.7,
              'isSignal':0, 
              'order':8},
+    
+    'ST_t_top':{'name':'ST_t_top', 
+                    'file':basedir + 'ST/TauTauAnalysis.ST_t-channel_top_4f_leptonDecays_ICHEP.root', 
+                    'cross-section':136.02,
+                    'isSignal':0, 
+                    'order':9},
+    
+
+    'ST_t_antitop':{'name':'ST_t_antitop', 
+                    'file':basedir + 'ST/TauTauAnalysis.ST_t-channel_antitop_4f_leptonDecays_ICHEP.root', 
+                    'cross-section':80.95,
+                    'isSignal':0, 
+                    'order':10},
+    
+
+    'ST_tw_top':{'name':'ST_tw_top', 
+                 'file':basedir + 'ST/TauTauAnalysis.ST_tW_top_5f_inclusiveDecays_ICHEP.root', 
+                 'cross-section':35.60,
+                 'isSignal':0, 
+                    'order':11},
+
+    'ST_tw_antitop':{'name':'ST_tw_antitop', 
+                     'file':basedir + 'ST/TauTauAnalysis.ST_tW_antitop_5f_inclusiveDecays_ICHEP.root', 
+                     'cross-section':35.60,
+                     'isSignal':0, 
+                     'order':12},
 
 #    'Signal':{'name':'Signal', 
-#              'file':basedir + 'signal/TauTauAnalysis.LowMass_30GeV_DiTauResonance.root', 
+#              'file':basedir + 'signal/TauTauAnalysis.LowMass_30GeV_DiTauResonance_ICHEP.root', 
 #              'cross-section':1.,
 #              'isSignal':1, 
 #              'order':3000},
 
-    'data':{'name':'data_obs', 
-            'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016.root',
-            'cross-section':1.,
-            'isSignal':0, 
-            'order':2999},
+    'data_obs':{'name':'data_obs', 
+                'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016_ICHEP.root',
+                'cross-section':1.,
+                'isSignal':0, 
+                'order':2999},
 
 }
 
 vardir = {
     'm_vis':{'drawname':'m_vis', 'nbins':30, 'min':0, 'max':120, 'label':'visible mass (GeV)'},
-    'mt_1':{'drawname':'mt_1', 'nbins':40, 'min':0, 'max':200, 'label':'Transverse mass (GeV)'},
+    'pfmt_1':{'drawname':'pfmt_1', 'nbins':40, 'min':0, 'max':200, 'label':'PF MET Transverse mass (GeV)'},
+    'mt_1':{'drawname':'mt_1', 'nbins':40, 'min':0, 'max':200, 'label':'MVA MET Transverse mass (GeV)'},
     'met':{'drawname':'met', 'nbins':30, 'min':0, 'max':200, 'label':'missing E_{T} (GeV)'},
     'dR_ll':{'drawname':'dR_ll', 'nbins':30, 'min':0, 'max':math.pi, 'label':'#Delta R (l, #tau)'},
     'pt_1':{'drawname':'pt_1', 'nbins':30, 'min':0, 'max':200, 'label':'muon pT (GeV)'},
-    'pt_2':{'drawname':'pt_2', 'nbins':30, 'min':0, 'max':200, 'label':'tau pT (GeV)'}
+    'pt_2':{'drawname':'pt_2', 'nbins':30, 'min':0, 'max':200, 'label':'tau pT (GeV)'},
+    'eta_1':{'drawname':'eta_1', 'nbins':30, 'min':-2.5, 'max':2.5, 'label':'muon eta'},
+    'eta_2':{'drawname':'eta_2', 'nbins':30, 'min':-2.5, 'max':2.5, 'label':'tau eta'},
+    'njets':{'drawname':'njets', 'nbins':10, 'min':0, 'max':10, 'label':'# of jets (pT > 30)'},
+    'nfjets':{'drawname':'nfjets', 'nbins':10, 'min':0, 'max':10, 'label':'# of forward jets (pT > 30)'},
+    'byIsolationMVA3oldDMwLTraw_2':{'drawname':'byIsolationMVA3oldDMwLTraw_2', 'nbins':30, 'min':-1, 'max':1, 'label':'Tau MVA isolation'},
+    'byCombinedIsolationDeltaBetaCorrRaw3Hits_2':{'drawname':'byCombinedIsolationDeltaBetaCorrRaw3Hits_2', 'nbins':30, 'min':0, 'max':200, 'label':'Tau dbeta isolation'},
+    'jpt_1':{'drawname':'jpt_1', 'nbins':30, 'min':0, 'max':500, 'label':'leading jet pT (GeV)'},
+    'jeta_1':{'drawname':'jeta_1', 'nbins':30, 'min':-5, 'max':5, 'label':'leading jet eta'},
+    'jpt_2':{'drawname':'jpt_2', 'nbins':30, 'min':0, 'max':500, 'label':'sub leading jet pT (GeV)'},
+    'jeta_2':{'drawname':'jeta_2', 'nbins':30, 'min':-5, 'max':5, 'label':'sub leading jet eta'},
     }
 
 
 # currently, for mu-tau channel only
 categories = collections.OrderedDict()
-categories['nominal_ss'] = {'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'}
-categories['nominal_os'] = {'sel':'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2<0 && channel==1'}
+
+baseselection = 'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'
+
+categories['nominal_ss'] = {'sel':baseselection}
+categories['nominal_os'] = {'sel':baseselection.replace('q_1*q_2>0', 'q_1*q_2<0')}
 
 
 # Retrieve the # of generated events for the normalization
 for processname, val in process.iteritems():
+
+    print processname,
 
     file = TFile(val['file'])
 
@@ -120,7 +164,7 @@ for processname, val in process.iteritems():
     process[processname]['ntot'] = ntot
     process[processname]['file'] = file
 
-    print 'Register : ', processname, process[processname]['ntot']
+    print '.... Register : ', process[processname]['ntot']
 
 
 
@@ -159,7 +203,7 @@ for catname, cat in categories.iteritems():
 
             var_tuples.append('{var} >> {hist}'.format(var=var['drawname'], hist=hname))
 
-        cut = '({c}) * {we}'.format(c=cat['sel'], we='weight')
+        cut = '({c}) * {we}'.format(c=cat['sel'], we='weight*(gen_match_2==5 ? 0.95 : 1)')
         tree.MultiDraw(var_tuples, cut)
 
 
@@ -172,7 +216,7 @@ if normalizeWusinghighMT:
     wyield = 0
 
     for processname, val in process.iteritems():
-        hname = 'hist_nominal_os_' + processname + '_mt_1'
+        hname = 'hist_nominal_os_' + processname + '_pfmt_1'
         bin_min = hists[hname].GetXaxis().FindBin(WsidebandMTvalue)
         bin_max = hists[hname].GetXaxis().FindBin(hists[hname].GetXaxis().GetXmax())
 
@@ -243,10 +287,12 @@ for catname, cat in categories.iteritems():
             hist.AddHistogram('QCD', h_QCD, 0)
             
 
-        hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q'])
+        hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q', 'ST_t_top', 'ST_t_antitop', 'ST_tw_top', 'ST_tw_antitop'])
 #        hist.Group('electroweak', ['WZ', 'ZZ', 'WWTo1L1Nu2Q'])
 
+        print '='*80
         print hist
-    
+        print '='*80
+
         comparisonPlots(hist, 'fig_' + catname + '/' + stackname + '.pdf')
 

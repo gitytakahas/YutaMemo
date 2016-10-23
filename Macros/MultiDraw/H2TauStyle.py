@@ -92,6 +92,7 @@ histPref['T*tW*'] = {'style':sHTT_TTJets, 'layer':1, 'legend':'Single t'}
 histPref['electroweak*'] = {'style':sHTT_WJets, 'layer':2, 'legend':'Electroweak'} 
 histPref['TTo*'] = {'style':sHTT_TTJets, 'layer':1, 'legend':'Single t'} 
 histPref['Single t'] = {'style':sHTT_TTJets, 'layer':1, 'legend':'Single t'} 
+histPref['ST*'] = {'style':sHTT_TTJets, 'layer':1, 'legend':'Single t'} 
 histPref['WW*'] = {'style':sHTT_VV, 'layer':0.9, 'legend':'Diboson'} 
 histPref['WZ*'] = {'style':sHTT_VV, 'layer':0.8, 'legend':'Diboson'} 
 histPref['ZZ*'] = {'style':sHTT_VV, 'layer':0.7, 'legend':'Diboson'} 
