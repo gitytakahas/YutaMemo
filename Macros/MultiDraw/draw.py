@@ -3,16 +3,19 @@ from array import array
 from ROOT import gStyle, TCanvas, TLegend, TH1F
 from officialStyle import officialStyle
 from DisplayManager import DisplayManager
+from config import config
 from DataMCPlot import *
 import MultiDraw
 
 
 lumi=12.9
-#lumi=24.5
+basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput_SM/'
 
-evaluateQCDfromdata = True
+
 normalizeWusinghighMT = True
 WsidebandMTvalue = 80.
+WriteDataCard = True
+
 
 
 gROOT.SetBatch(True)
@@ -31,97 +34,10 @@ def ensureDir(directory):
         os.makedirs(directory)
 
 
-basedir = '/mnt/t3nfs01/data01/shome/ytakahas/work/TauTau/SFrameAnalysis/AnalysisOutput/'
 
-process = {
+config = config(basedir, lumi)
+process = config.process
 
-    'TT':{'name':'TT', 
-          'file':basedir + '/TT/TauTauAnalysis.TT_TuneCUETP8M1_ICHEP.root',
-          'cross-section':831.76,
-          'isSignal':0, 
-          'order':1},
-
-    'DY10to50':{'name':'DY10to50', 
-                'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-10to50_TuneCUETP8M1_ICHEP.root', 
-                'cross-section':18610.0,
-                'isSignal':0, 
-                'order':2},
-
-    'DY50':{'name':'DY50', 
-            'file':basedir + '/DY/TauTauAnalysis.DYJetsToLL_M-50_TuneCUETP8M1_ICHEP.root',
-            'cross-section':5765.4,
-            'isSignal':0, 
-            'order':3},
-
-    'WWTo1L1Nu2Q':{'name':'WWTo1L1Nu2Q', 
-                   'file':basedir + '/WW/TauTauAnalysis.WWTo1L1Nu2Q_ICHEP.root',
-                   'cross-section':1.212,
-                   'isSignal':0, 
-                   'order':4},
-
-#    'WWTo4Q':{'name':'WWTo4Q', 
-#              'file':basedir + '/WW/TauTauAnalysis.WWTo4Q_4f_ICHEP.root', 
-#              'cross-section':22.82,
-#              'isSignal':0, 
-#              'order':5},
-
-    'WZ':{'name':'WZ', 
-          'file':basedir + '/WZ/TauTauAnalysis.WZ_TuneCUETP8M1_ICHEP.root', 
-          'cross-section':10.71,
-          'isSignal':0, 
-          'order':6},
-
-    'ZZ':{'name':'ZZ', 
-          'file':basedir + '/ZZ/TauTauAnalysis.ZZ_TuneCUETP8M1_ICHEP.root', 
-          'cross-section':3.22,
-          'isSignal':0, 
-          'order':7},
-
-    'WJets':{'name':'WJets', 
-             'file':basedir + 'WJ/TauTauAnalysis.WJetsToLNu_TuneCUETP8M1_ICHEP.root', 
-             'cross-section':61526.7,
-             'isSignal':0, 
-             'order':8},
-    
-    'ST_t_top':{'name':'ST_t_top', 
-                    'file':basedir + 'ST/TauTauAnalysis.ST_t-channel_top_4f_leptonDecays_ICHEP.root', 
-                    'cross-section':136.02,
-                    'isSignal':0, 
-                    'order':9},
-    
-
-    'ST_t_antitop':{'name':'ST_t_antitop', 
-                    'file':basedir + 'ST/TauTauAnalysis.ST_t-channel_antitop_4f_leptonDecays_ICHEP.root', 
-                    'cross-section':80.95,
-                    'isSignal':0, 
-                    'order':10},
-    
-
-    'ST_tw_top':{'name':'ST_tw_top', 
-                 'file':basedir + 'ST/TauTauAnalysis.ST_tW_top_5f_inclusiveDecays_ICHEP.root', 
-                 'cross-section':35.60,
-                 'isSignal':0, 
-                    'order':11},
-
-    'ST_tw_antitop':{'name':'ST_tw_antitop', 
-                     'file':basedir + 'ST/TauTauAnalysis.ST_tW_antitop_5f_inclusiveDecays_ICHEP.root', 
-                     'cross-section':35.60,
-                     'isSignal':0, 
-                     'order':12},
-
-#    'Signal':{'name':'Signal', 
-#              'file':basedir + 'signal/TauTauAnalysis.LowMass_30GeV_DiTauResonance_ICHEP.root', 
-#              'cross-section':1.,
-#              'isSignal':1, 
-#              'order':3000},
-
-    'data_obs':{'name':'data_obs', 
-                'file':basedir + 'SingleMuon/TauTauAnalysis.SingleMuon_Run2016_ICHEP.root',
-                'cross-section':1.,
-                'isSignal':0, 
-                'order':2999},
-
-}
 
 vardir = {
     'm_vis':{'drawname':'m_vis', 'nbins':30, 'min':0, 'max':120, 'label':'visible mass (GeV)'},
@@ -147,25 +63,10 @@ vardir = {
 # currently, for mu-tau channel only
 categories = collections.OrderedDict()
 
-baseselection = 'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1 && q_1*q_2>0 && channel==1'
+baseselection = 'dilepton_veto == 0 && extraelec_veto == 0 && extramuon_veto == 0 && againstElectronVLooseMVA6_2 == 1 && againstMuonTight3_2 == 1 && iso_1 < 0.15 && iso_2 == 1 && channel==1'
 
-categories['nominal_ss'] = {'sel':baseselection}
-categories['nominal_os'] = {'sel':baseselection.replace('q_1*q_2>0', 'q_1*q_2<0')}
-
-
-# Retrieve the # of generated events for the normalization
-for processname, val in process.iteritems():
-
-    print processname,
-
-    file = TFile(val['file'])
-
-    ntot = file.Get("histogram_mutau/cutflow_mutau").GetBinContent(1)
-    process[processname]['ntot'] = ntot
-    process[processname]['file'] = file
-
-    print '.... Register : ', process[processname]['ntot']
-
+categories['signal_os'] = {'sel':baseselection + '&& q_1*q_2<0'}
+categories['signal_ss'] = {'sel':categories['signal_os']['sel'].replace('q_1*q_2<0', 'q_1*q_2>0')}
 
 
 hists = {}
@@ -173,12 +74,12 @@ hists = {}
 for catname, cat in categories.iteritems():
 
     print '-'*80
-    print '[INFO] Categories = ', catname
-    print '[INFO] ', cat['sel']
+    print '[INFO]', catname, ':', cat['sel']
     print '-'*80
 
     for processname, val in process.iteritems():
-
+        if processname=='QCD': continue
+        
         tree = val['file'].Get('tree_mutau')
 
         print        
@@ -203,8 +104,52 @@ for catname, cat in categories.iteritems():
 
             var_tuples.append('{var} >> {hist}'.format(var=var['drawname'], hist=hname))
 
-        cut = '({c}) * {we}'.format(c=cat['sel'], we='weight*(gen_match_2==5 ? 0.95 : 1)')
+        weight = 'weight*' + str(val['cross-section']*config.lumi*1000/val['ntot'])  + '*(gen_match_2==5 ? 0.95 : 1)'
+        print 'weight = ', weight
+
+        if val['name'] in ['data_obs']:
+            weight = '1'
+
+        cut = '({c}) * {we}'.format(c=cat['sel'], we=weight)
         tree.MultiDraw(var_tuples, cut)
+
+
+
+print 'Estimating QCD using SS region'
+
+for varname, var in vardir.iteritems():        
+
+    h_QCD = None
+
+    for processname, val in process.iteritems():
+        if processname=='QCD': continue
+
+        hname = 'hist_signal_ss_' + processname + '_' + varname
+            
+        addfactor = -1
+        if val['name'] == 'data_obs':
+            addfactor = 1.
+            
+        if h_QCD == None:
+            h_QCD = copy.deepcopy(hists[hname])
+        else:
+            h_QCD.Add(hists[hname], addfactor)
+
+
+    h_QCD_ss = copy.deepcopy(h_QCD)
+    h_QCD_os = copy.deepcopy(h_QCD)
+    h_QCD_os.Scale(1.06)
+
+    osname = 'hist_signal_os_QCD_' + varname
+    ssname = 'hist_signal_ss_QCD_' + varname
+
+    h_QCD_os.SetName(osname)
+    h_QCD_ss.SetName(ssname)
+    
+    hists[osname] = h_QCD_os
+    hists[ssname] = h_QCD_ss
+
+
 
 
 SFforW = 1.
@@ -216,24 +161,29 @@ if normalizeWusinghighMT:
     wyield = 0
 
     for processname, val in process.iteritems():
-        hname = 'hist_nominal_os_' + processname + '_pfmt_1'
+        hname = 'hist_signal_os_' + processname + '_pfmt_1'
         bin_min = hists[hname].GetXaxis().FindBin(WsidebandMTvalue)
         bin_max = hists[hname].GetXaxis().FindBin(hists[hname].GetXaxis().GetXmax())
 
         pname = val['name']
-        scale = val['cross-section']*lumi*1000/val['ntot']
 
         if pname == 'WJets':
-            wyield = hists[hname].Integral(bin_min, bin_max)*scale
+            wyield = hists[hname].Integral(bin_min, bin_max)
         elif pname == 'data_obs':
             data = hists[hname].Integral(bin_min, bin_max)
+#            totalmc += hists['hist_signal_os_QCD_pfmt_1'].Integral(bin_min, bin_max)
         else:
-            totalmc += hists[hname].Integral(bin_min, bin_max)*scale
+            totalmc += hists[hname].Integral(bin_min, bin_max)
+
 
 
     if wyield!=0:
         SFforW = (data - totalmc)/wyield
         print 'W normalization summary : data ', data, ', other MC : ', totalmc, ', Wyield : ', wyield, ', SF = ', SFforW
+
+
+
+
 
 
 for catname, cat in categories.iteritems():
@@ -250,16 +200,10 @@ for catname, cat in categories.iteritems():
 
             hname = 'hist_' + catname + '_' + processname + '_' + varname
             pname = val['name']
-               
-            if not pname in ['data_obs']:
-                SF = val['cross-section']*lumi*1000/val['ntot']
-                hists[hname].Scale(SF)
-            #                print '[INFO] : ', val['name'], ', sigma =', val['cross-section'], 'SF = ', SF
 
             if pname == 'WJets':
                 hists[hname].Scale(SFforW)
                 print 'additionally normalize W by ', SFforW
-
 
 
             hist.AddHistogram(pname, hists[hname], val['order'])
@@ -267,24 +211,8 @@ for catname, cat in categories.iteritems():
             if pname in ['data_obs']:
                 hist.Hist(pname).stack = False
 
-
-        if evaluateQCDfromdata and catname.find('os')!=-1:
-            h_QCD = None
-
-            for processname, val in process.iteritems():
-
-                hname = 'hist_' + catname.replace('os', 'ss') + '_' + processname + '_' + varname
-
-                addfactor = -1
-                if val['name'] == 'data_obs':
-                    addfactor = 1.
-
-                if h_QCD == None:
-                    h_QCD = copy.deepcopy(hists[hname])
-                else:
-                    h_QCD.Add(hists[hname], addfactor)
-
-            hist.AddHistogram('QCD', h_QCD, 0)
+#                qcdname = 'hist_' + catname + '_QCD_' + varname
+#                hist.AddHistogram('QCD', hists[qcdname], 0)
             
 
         hist.Group('electroweak', ['WJets', 'WZ', 'ZZ', 'WWTo1L1Nu2Q', 'ST_t_top', 'ST_t_antitop', 'ST_tw_top', 'ST_tw_antitop'])
@@ -296,3 +224,7 @@ for catname, cat in categories.iteritems():
 
         comparisonPlots(hist, 'fig_' + catname + '/' + stackname + '.pdf')
 
+
+        if WriteDataCard == True and varname=='m_vis' and catname=='signal_os':
+            hist.WriteDataCard(filename='datacard_{}.root'.format(varname), dir='mt_' + catname, mode='recreate')
+            

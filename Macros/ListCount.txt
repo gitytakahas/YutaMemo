@@ -1,2 +1,0 @@
-#/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Spring14miniaod-PU40bx25_POSTLS170_V5-v2/MINIAODSIM/TauMu_MiniAOD_noSVfit_Sep5_Yuta/
-/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Spring14miniaod-PU40bx25_POSTLS170_V7-v2/MINIAODSIM/TauMu_MiniAOD_noSVfit_Sep5_Yuta/
