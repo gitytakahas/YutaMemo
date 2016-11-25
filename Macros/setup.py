@@ -68,8 +68,8 @@ cb.cp().process(['ZJ']).AddSyst(
 
 
 print '>> Extracting histograms from input root files...'
-#file = aux_shapes + 'datacard.root'
-file = aux_shapes + 'datacard_combine_1p.root'
+file = aux_shapes + 'datacard.root'
+#file = aux_shapes + 'datacard_combine_1p.root'
 
 cb.cp().backgrounds().ExtractShapes(
     file, '$BIN/$PROCESS', '$BIN/$PROCESS_$SYSTEMATIC')
@@ -86,9 +86,11 @@ cb.cp().signals().ExtractShapes(
 
 print '>> Generating bbb uncertainties...'
 bbb = ch.BinByBinFactory()
-bbb.SetAddThreshold(0.0).SetFixNorm(True)
+bbb.SetAddThreshold(0.0)
+#.SetFixNorm(False)
 bbb.AddBinByBin(cb.cp().process(procs['sig'] + ['W', 'QCD', 'ZJ', 'ZL']), cb)
-
+#bbb.MergeBinErrors(cb.cp().process(procs['sig'] + ['W', 'QCD', 'ZJ', 'ZL']))
+#bbb.SetMergeThreshold(0.0)
 
 print '>> Setting standardised bin names...'
 ch.SetStandardBinNames(cb)
