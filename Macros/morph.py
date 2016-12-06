@@ -5,7 +5,7 @@ import CombineHarvester.CombinePdfs.morphing as morphing
 from CombineHarvester.CombinePdfs.morphing import BuildRooMorphing
 from ROOT import RooWorkspace, TFile, RooRealVar
 import ROOT
-import os
+import os, sys
 
 
 
@@ -20,9 +20,24 @@ procs = {
 
 cats = [(1, 'mt_signal')]
 
+
+tess = []
+
+for tes in range(-30,31):
+    tes = 1 + tes*0.001
+#    print tes, 'is added'
+    
+    addname = str(tes)
+
+#    if addname=='1.0':
+#        addname = '1'
+
+    tess.append(addname)
+
 cb.AddObservations(  ['*'], ['ztt'], ["13TeV"], ['mt'],               cats         )
 cb.AddProcesses(     ['*'], ['ztt'], ["13TeV"], ['mt'], procs['bkg'], cats, False  )
-cb.AddProcesses(     [''], ['ztt'], ["13TeV"], ['mt'], procs['sig'], cats, True   )
+#cb.AddProcesses(     [''], ['ztt'], ["13TeV"], ['mt'], procs['sig'], cats, True   )
+cb.AddProcesses(     tess, ['ztt'], ["13TeV"], ['mt'], procs['sig'], cats, True   )
 
 print '>> Adding systematic uncertainties...'
 
@@ -81,16 +96,13 @@ cb.cp().signals().ExtractShapes(
 
 
 
-#w = ROOT.RooWorkspace('morph', 'morph')
-#tes = ROOT.RooRealVar("tes","", 1.0, 0.97, 1.03)
-#morphing.BuildRooMorphing(w, cb, 'mt_signal', 'ZTT', tes, 'norm', True, True)
 
 tes = RooRealVar('tes', 'tes', 0.97, 1.03);
 tes.setConstant(True)
 
 f_debug = TFile('morph_debug.root', 'RECREATE')
 
-ws = RooWorkspace('httbar', 'httbar')
+ws = RooWorkspace('htt', 'htt')
 bins = cb.bin_set()
 for bin in bins:
     for proc in procs['sig']:
@@ -117,6 +129,7 @@ cb.PrintAll()
 writer = ch.CardWriter('$TAG/$ANALYSIS_$CHANNEL_$BINID_$ERA.txt',
                        '$TAG/common/$ANALYSIS_$CHANNEL.input.root')
 writer.SetVerbosity(1)
+writer.SetWildcardMasses([])
 writer.WriteCards('output/sm_cards/LIMITS', cb)
 
 print '>> Done!'
